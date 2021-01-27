@@ -12,11 +12,10 @@ import (
 )
 
 /*Descr: Sends a GET request to a web address specified by command argument
-Returns the mean of the speed of the transaction, the latency and wheter it was a success or
+Returns the mean of the speed of the transaction, the latency and whether it was a success or
 a failure. Since this version only performs a single request, the mean equals the natural time
 */
 
-//Example = https://jsonplaceholder.typicode.com/posts
 
 func connectionHandling(urlAddress string)(failure bool, err error, Latency float32, TPS float32){
    req, err := http.NewRequest("GET", urlAddress, nil)
@@ -39,7 +38,6 @@ func connectionHandling(urlAddress string)(failure bool, err error, Latency floa
    if _, err := io.Copy(ioutil.Discard, res.Body); err != nil {
       return true, err, 0.0, 0.0
    }
-   //client closes socket
    res.Body.Close()
 
    DnsLookup := float32(result.DNSLookup/time.Millisecond)
@@ -47,8 +45,6 @@ func connectionHandling(urlAddress string)(failure bool, err error, Latency floa
    TLSHandshake := float32(result.TLSHandshake/time.Millisecond)
    serverProcessing := float32(result.ServerProcessing/time.Millisecond)
    contentTransfer := float32(result.ContentTransfer(time.Now())/time.Millisecond)
-
-   // Show the results
 
    return false, nil, DnsLookup + TCPConnection + TLSHandshake + serverProcessing + contentTransfer, 1000/serverProcessing
 }
@@ -59,13 +55,12 @@ func main() {
    urlAddress := os.Args [1]
    connectionFailed, err, latency, TPS := connectionHandling(urlAddress)
    if connectionFailed == true{
+      // Error log
       log.Fatal(err)
    } else{
+      // Show the results
       log.Printf("Total latency: %f ms", latency)
       log.Printf("TPS: %f", TPS)
    }
 }
-
-
-//log.Printf("Content transfer: %d ms", int(result.ContentTransfer(time.Now())/time.Millisecond))
 

@@ -1,0 +1,25 @@
+
+In order to not lose track of what I'm doing, I've decided to start a log:
+
+1- I have implemented a basicAb: this one simply makes a request and returns tps, latency and whether it was a failure or not.
+
+2- I am implementing the actual ab.
+26/1 21:51-> added the -n flag recognition
+	Turns out that in order to make it work you have to use:
+	go run . <address> -n 100
+	instead of the expected
+	go run . -n 100  <address>
+
+	I will look onto that later.
+
+27/1 11:00-> Started to work on the -n actual implementation.
+		Once I am done with this I want to clean the code and
+		udate the readme with the results of exercise 1
+		I also want to add some error handling routines.
+
+	12:15 -> I can't seem to get the flag to business work. I'm not sure what is wrong. Reference: https://gobyexample.com/command-line-flags
+	12:44 -> Finally made it work. I also managed to put the flags in their
+	right places. Now I have to make it so it sends the number of requests
+	I specify.
+	17:00 -> The -n flag seems to be working fine. Now I'm going to improve the code documentation and work into some error handling aspects. I will also need to work in the readme a little bit more.
+
