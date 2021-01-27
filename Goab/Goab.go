@@ -15,14 +15,15 @@ import (
 /** @Description: attempts to fulfil a Get request with the specified url and returns the results
    @param urlAddress: a string containing the full url who will get the connection requests
    @return failure: a boolean specifying if the connection was or was not a success
-   @return err: the error message if an error had happened
    @return Latency: latency of said connection as the sum of the httpstat parameters
    @return TPS:  the estimated transactions per second obtained from that page
  */
-func connectionHandling(urlAddress string)(failure bool, err error, Latency float64, TPS float64){
+func connectionHandling(urlAddress string)(failure bool, Latency float64, TPS float64){
+
+   //create Get request to the urlAddress
    req, err := http.NewRequest("GET", urlAddress, nil)
    if err != nil {
-      return true, err, 0.0, 0.0
+      return true, 0.0, 0.0
    }
 
    //create httpstat context and add it to the request
@@ -34,24 +35,24 @@ func connectionHandling(urlAddress string)(failure bool, err error, Latency floa
    client := http.DefaultClient
    res, err := client.Do(req)
    if err != nil {
-      return true, err, 0.0, 0.0
+      return true, 0.0, 0.0
+   }
+   if _, err := io.Copy(ioutil.Discard, res.Body); err != nil {
+      return true, 0.0, 0.0
    }
 
-   if _, err := io.Copy(ioutil.Discard, res.Body); err != nil {
-      return true, err, 0.0, 0.0
-   }
    //client closes socket
    res.Body.Close()
 
+   //get the stats
    DnsLookup := float64(result.DNSLookup/time.Millisecond)
    TCPConnection := float64(result.TCPConnection/time.Millisecond)
    TLSHandshake := float64(result.TLSHandshake/time.Millisecond)
    serverProcessing := float64(result.ServerProcessing/time.Millisecond)
    contentTransfer := float64(result.ContentTransfer(time.Now())/time.Millisecond)
 
-   // Show the results
-
-   return false, nil, DnsLookup + TCPConnection + TLSHandshake + serverProcessing + contentTransfer,
+   //return the results
+   return false, DnsLookup + TCPConnection + TLSHandshake + serverProcessing + contentTransfer,
    1000/serverProcessing
 }
 
@@ -68,23 +69,26 @@ func main() {
    //flag management
    numberReqFlag := flag.Int("n", 1, "Total number of requests")
    flag.Parse()
+
+   //get the url, handle in case it is not present
+   if len(flag.Args()) == 0{
+      log.Fatal("No url was given")
+   }
    urlAddress := flag.Args()[0]
 
+   //perform the -n number of requests. Will perform 1 if the option was not enabled
    i := 0
    for i < *numberReqFlag {
-      connectionFailed, err, latency, TPS := connectionHandling(urlAddress)
-      if connectionFailed == true {
-         log.Fatal(err)
-      } else{
+      connectionFailed, latency, TPS := connectionHandling(urlAddress)
+      if connectionFailed == false {
          successfulConnections = successfulConnections + 1.0
          totalLatency = totalLatency + latency
          totalTPS = totalTPS + TPS
       }
       i++
    }
-   if totalLatency > 0 {
-      log.Printf("Message")
-   }
+
+   //print the results
    if successfulConnections != 0.0 {
       log.Printf("Mean latency: %f ms", totalLatency/successfulConnections)
       log.Printf("Mean TPS: %f", totalTPS/successfulConnections)
