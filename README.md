@@ -19,41 +19,68 @@ Each option allows for different things:
 ### Experimenting with concurrency
 #### No concurrency vs concurrency
 Concurrency Level:      1
+
 Time taken for tests:   0.590 seconds
+
 Complete requests:      5000
+
 Failed requests:        0
+
 Total transferred:      4270000 bytes
+
 HTML transferred:       3060000 bytes
+
 Requests per second:    8481.38 [#/sec] (mean)
+
 Time per request:       0.118 [ms] (mean)
+
 Time per request:       0.118 [ms] (mean, across all concurrent requests)
+
 Transfer rate:          7073.33 [Kbytes/sec] received
 
 vs
 
 Concurrency Level:      2
+
 Time taken for tests:   0.269 seconds
+
 Complete requests:      5000
+
 Failed requests:        0
+
 Total transferred:      4270000 bytes
+
 HTML transferred:       3060000 bytes
+
 Requests per second:    18562.79 [#/sec] (mean)
+
 Time per request:       0.108 [ms] (mean)
+
 Time per request:       0.054 [ms] (mean, across all concurrent requests)
+
 Transfer rate:          15481.08 [Kbytes/sec] received
 
 Adding just a bit of concurrency implies a great improvement on the efficiency: more requests are processed at the same time and the ratio of transmission improves too.
 
 #### Concurrency 2 vs concurrency 3
 Concurrency Level:      3
+
 Time taken for tests:   0.311 seconds
+
 Complete requests:      5000
+
 Failed requests:        0
+
 Total transferred:      4270000 bytes
+
 HTML transferred:       3060000 bytes
+
 Requests per second:    16061.88 [#/sec] (mean)
+
 Time per request:       0.187 [ms] (mean)
+
 Time per request:       0.062 [ms] (mean, across all concurrent requests)
+
 Transfer rate:          13395.36 [Kbytes/sec] received
 
 Level 3 of efficiency gets much worse here, though it is still slighty better than no concurrency.
@@ -61,15 +88,25 @@ Level 3 of efficiency gets much worse here, though it is still slighty better th
 ### Experimenting with the -k option
 #### No concurrency
 Concurrency Level:      1
+
 Time taken for tests:   0.264 seconds
+
 Complete requests:      5000
+
 Failed requests:        0
+
 Keep-Alive requests:    4950
+
 Total transferred:      4294750 bytes
+
 HTML transferred:       3060000 bytes
+
 Requests per second:    18916.25 [#/sec] (mean)
+
 Time per request:       0.053 [ms] (mean)
+
 Time per request:       0.053 [ms] (mean, across all concurrent requests)
+
 Transfer rate:          15867.30 [Kbytes/sec] received
 
 If we compare this with the previous situation where we hadn't enabled the k option, we will realize that enabling the K option provides a great improvement. Since there's no need to open and close sockets (except for the first ones) and we keep recycling those, we save a lot of time that we can devote onto performing actual tasks.
@@ -79,15 +116,25 @@ As we keep adding leves of concurrency, we will be glad to realize that the exec
 
 For me the point was 6, where we kept getting similar results to:
 Concurrency Level:      6
+
 Time taken for tests:   0.085 seconds
+
 Complete requests:      5000
+
 Failed requests:        0
+
 Keep-Alive requests:    4953
+
 Total transferred:      4294765 bytes
+
 HTML transferred:       3060000 bytes
+
 Requests per second:    59061.16 [#/sec] (mean)
+
 Time per request:       0.102 [ms] (mean)
+
 Time per request:       0.017 [ms] (mean, across all concurrent requests)
+
 Transfer rate:          49541.76 [Kbytes/sec] received
 
 ## Exercise 2
