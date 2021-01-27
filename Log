@@ -4,7 +4,8 @@ In order to not lose track of what I'm doing, I've decided to start a log:
 1- I have implemented a basicAb: this one simply makes a request and returns tps, latency and whether it was a failure or not.
 
 2- I am implementing the actual ab.
-26/1 21:51-> added the -n flag recognition
+--------------------26/1 
+21:51-> added the -n flag recognition
 	Turns out that in order to make it work you have to use:
 	go run . <address> -n 100
 	instead of the expected
@@ -12,7 +13,8 @@ In order to not lose track of what I'm doing, I've decided to start a log:
 
 	I will look onto that later.
 
-27/1 11:00-> Started to work on the -n actual implementation.
+--------------------27/1
+11:00-> Started to work on the -n actual implementation.
 		Once I am done with this I want to clean the code and
 		udate the readme with the results of exercise 1
 		I also want to add some error handling routines.
@@ -22,4 +24,21 @@ In order to not lose track of what I'm doing, I've decided to start a log:
 	right places. Now I have to make it so it sends the number of requests
 	I specify.
 	17:00 -> The -n flag seems to be working fine. Now I'm going to improve the code documentation and work into some error handling aspects. I will also need to work in the readme a little bit more.
+	18:12 -> I've already improved the code documentation and the error handling aspects. Now I'm going to focus on improving the readme a bit more.
+	19:30 -> Updated readme with the results for excercise 1.
+	19:35 -> decided to try to finally run my goab program and compare it with the ab on my nginx server
+ab -n 5000 http://<IP>/
+go run . -n 5000 http://<IP>/
+
+BUG:
+The results for ab were right... but the ones for go were...:
+2021/01/27 20:03:03 Mean latency: 0.000000 ms
+2021/01/27 20:03:03 Mean TPS: +Inf
+2021/01/27 20:03:03 Successful connections: 5000.000000
+
+I might have misunderstood the problem? I'm going to check
+
+	20:00 -> It seems to work with other url's but not with the one from my own server
+	20:30 -> both ab and my own implementation are very slow. I think it is best if I first focus on making my own implementation work properly.
+
 

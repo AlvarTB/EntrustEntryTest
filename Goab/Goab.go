@@ -51,6 +51,12 @@ func connectionHandling(urlAddress string)(failure bool, Latency float64, TPS fl
    serverProcessing := float64(result.ServerProcessing/time.Millisecond)
    contentTransfer := float64(result.ContentTransfer(time.Now())/time.Millisecond)
 
+   //log.Printf("TCPConnection: %f", TCPConnection)
+   //log.Printf("TLSHandshake: %f", TLSHandshake)
+   //log.Printf("serverProcessing: %f", serverProcessing)
+   //log.Printf("contentTransger: %f", contentTransfer)
+
+
    //return the results
    return false, DnsLookup + TCPConnection + TLSHandshake + serverProcessing + contentTransfer,
    1000/serverProcessing
@@ -86,6 +92,7 @@ func main() {
          totalTPS = totalTPS + TPS
       }
       i++
+      log.Printf("Request finished number: %d " , i)
    }
 
    //print the results

@@ -1,0 +1,11 @@
+
+
+
+27/01 Started bug report:
+
+1- Sending a request to my own server yields this results:
+The results for ab were right... but the ones for go were...:
+2021/01/27 20:03:03 Mean latency: 0.000000 ms
+2021/01/27 20:03:03 Mean TPS: +Inf
+2021/01/27 20:03:03 Successful connections: 5000.000000
+
