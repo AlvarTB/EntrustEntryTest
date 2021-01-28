@@ -149,6 +149,13 @@ For that, I had to use the github.com/tcnksm/go-httpstat package.
 
 For now, it only displays the total time spent performing each task of the http connection.
 
+Usage (on the same folder as the script)
+run go . <url>
+
 #### Goab
 This is the actual goab project. It attempts to emulate the behavior of the ab command. It is based on the SimpleAB small project.
-For now, it only registers the -n option. Currently working on more options right now.
+For now, it only registers the -n option. Unfortunately, the results don't seem to be exactly as the ones from the ab implementation.
+
+
+Usage (on the same folder as the script)
+run go . <-n number_of_requests> <url>
