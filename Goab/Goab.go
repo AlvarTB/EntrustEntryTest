@@ -43,23 +43,19 @@ func connectionHandling(urlAddress string)(failure bool, Latency float64, TPS fl
 
    //client closes socket
    res.Body.Close()
+   end := time.Now()
 
    //get the stats
    DnsLookup := float64(result.DNSLookup/time.Millisecond)
    TCPConnection := float64(result.TCPConnection/time.Millisecond)
    TLSHandshake := float64(result.TLSHandshake/time.Millisecond)
    serverProcessing := float64(result.ServerProcessing/time.Millisecond)
-   contentTransfer := float64(result.ContentTransfer(time.Now())/time.Millisecond)
-
-   //log.Printf("TCPConnection: %f", TCPConnection)
-   //log.Printf("TLSHandshake: %f", TLSHandshake)
-   //log.Printf("serverProcessing: %f", serverProcessing)
-   //log.Printf("contentTransger: %f", contentTransfer)
-
+   contentTransfer := float64(result.ContentTransfer(end)/time.Millisecond)
 
    //return the results
    return false, DnsLookup + TCPConnection + TLSHandshake + serverProcessing + contentTransfer,
-   1000/serverProcessing
+   1000/(DnsLookup + TCPConnection + TLSHandshake + serverProcessing + contentTransfer)
+
 }
 
 /** @Description: Performs the ab operation with the option -n
@@ -71,6 +67,8 @@ func main() {
    totalLatency := 0.0
    totalTPS := 0.0
    successfulConnections := 0.0
+   minimum := 99999.99
+   maximum := 0.0
 
    //flag management
    numberReqFlag := flag.Int("n", 1, "Total number of requests")
@@ -90,6 +88,12 @@ func main() {
          successfulConnections = successfulConnections + 1.0
          totalLatency = totalLatency + latency
          totalTPS = totalTPS + TPS
+         if minimum > latency{
+            minimum = latency
+         }
+         if maximum < latency {
+            maximum = latency
+         }
       }
       i++
       log.Printf("Request finished number: %d " , i)
@@ -97,6 +101,8 @@ func main() {
 
    //print the results
    if successfulConnections != 0.0 {
+      log.Printf("MINIMUM: %f ms", minimum)
+      log.Printf("MAXIMUM: %f", maximum)
       log.Printf("Mean latency: %f ms", totalLatency/successfulConnections)
       log.Printf("Mean TPS: %f", totalTPS/successfulConnections)
       log.Printf("Successful connections: %f", successfulConnections)
