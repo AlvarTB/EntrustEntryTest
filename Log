@@ -41,4 +41,58 @@ I might have misunderstood the problem? I'm going to check
 	20:00 -> It seems to work with other url's but not with the one from my own server
 	20:30 -> both ab and my own implementation are very slow. I think it is best if I first focus on making my own implementation work properly.
 
+28/01
+	11:00 -> I decide to test ab and goab with less -n, the results are extremelly different: did I get the whole thing wrong? I have decided to take some time to sit down and see if I clearly understood the problem.
+
+Concurrency Level:      1
+Time taken for tests:   209.292 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      6602482 bytes
+HTML transferred:       6147000 bytes
+Requests per second:    4.78 [#/sec] (mean)
+Time per request:       209.292 [ms] (mean)
+Time per request:       209.292 [ms] (mean, across all concurrent requests)
+Transfer rate:          30.81 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       94  154  42.5    148     686
+Processing:    31   55  28.8     50     462
+Waiting:       31   55  28.7     50     462
+Total:        126  209  58.7    201     763
+
+
+
+go run . -n 1000 https://gobyexample.com/command-line-arguments
+
+2021/01/28 11:27:03 Mean latency: 47.276000 ms
+2021/01/28 11:27:03 Mean TPS: 22.494484
+2021/01/28 11:27:03 Successful connections: 1000.000000
+
+	12:00 -> Does the division in go language works as in c++? When I do 1000/param1+param2+param3 gives Inf+, but it gives the actual result with 1000/(p1+p2+p3)
+	12:45 -> Can't figure out what is going on. I'm going to try something a little bit different. Instead of using httpstat, I'm going to calculate the tps by my own hand using Time.now()
+	13:00 -> Using the Time.now() yields the same exact results as using httpstat. Maybe I am badly interpreting the ab mesaurements?
+	13:20 -> What if I try to get the minimum and the maximum and compare those? Undertanding what exactly is TPS and the Latency and how it correlates to the ab results is my problem here, so let's keep it simple, shall we?
+	13:30 WHy is the ab so slow...? am I forgetting to add something to the mesaurementes of goab?
+ab
+	Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       95  151  30.8    150     511
+Processing:    31   55  80.0     50    2076
+Waiting:       30   53  48.0     50    1436
+Total:        127  206  88.0    202    2255
+
+goab
+2021/01/28 13:35:53 MINIMUM: 50.000000 ms
+2021/01/28 13:35:53 MAXIMUM: 225.000000
+2021/01/28 13:35:53 Mean latency: 58.143000 ms
+	
+	13:45 Later I will try to estimate the requests per second with my program,
+if the results are similar to the ones from AB, it means I've got this all wrong and the program is actually right, I just don't seem to undertand what TPS means.
+
+
+	17:00 I've realized that the calculations for the number of requests per second is right. Then, I guess it's different to TPS? Or does ab makes a whole different kind of transactions?
+
+
 
