@@ -82,6 +82,7 @@ func main() {
 
    //perform the -n number of requests. Will perform 1 if the option was not enabled
    i := 0
+
    for i < *numberReqFlag {
       connectionFailed, latency, TPS := connectionHandling(urlAddress)
       if connectionFailed == false {
@@ -98,11 +99,11 @@ func main() {
       i++
       log.Printf("Request finished number: %d " , i)
    }
-
    //print the results
+
    if successfulConnections != 0.0 {
-      log.Printf("MINIMUM: %f ms", minimum)
-      log.Printf("MAXIMUM: %f", maximum)
+      log.Printf("Minimum: %f ms", minimum)
+      log.Printf("Maximum: %f", maximum)
       log.Printf("Mean latency: %f ms", totalLatency/successfulConnections)
       log.Printf("Mean TPS: %f", totalTPS/successfulConnections)
       log.Printf("Successful connections: %f", successfulConnections)
